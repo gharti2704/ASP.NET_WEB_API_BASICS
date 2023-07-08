@@ -6,6 +6,8 @@ public class ApplicationDbContext : DbContext
 {
     private readonly IConfiguration _configuration;
     public DbSet<User> Users { get; set; }
+    public DbSet<User> UsersJobInfo { get; set; }
+    public DbSet<User> UsersSalary { get; set; }
     public ApplicationDbContext(IConfiguration configuration)
     {
         _configuration = configuration;
@@ -22,6 +24,9 @@ public class ApplicationDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // base.OnModelCreating(modelBuilder);
+        modelBuilder.HasDefaultSchema("BasicWebAPI");
         modelBuilder.Entity<User>().ToTable("Users");
+        modelBuilder.Entity<UserJobInfo>().ToTable("UsersJobInfo");
+        modelBuilder.Entity<UserSalary>().ToTable("UsersSalary");
     }
 }
