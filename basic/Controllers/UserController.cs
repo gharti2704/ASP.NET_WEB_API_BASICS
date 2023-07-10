@@ -1,6 +1,5 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using basic.Models;
 using basic.Data;
 using basic.Dtos;
@@ -11,17 +10,12 @@ namespace basic.Controllers;
 [Route("api")]
 public class UserController : ControllerBase
 {
-    private readonly ApplicationDbContext _context;
     private readonly IMapper _mapper;
-    // public UserController(IConfiguration configuration, IMapper mapper)
-    // {
-    //     _context = new ApplicationDbContext(configuration);
-    //     _mapper = mapper;
-    // }
-    public UserController(IMapper mapper, ApplicationDbContext context)
+    private readonly IUserRepository _userRepository;
+    public UserController(IMapper mapper, IUserRepository userRepository)
     {
-        _context = context;
         _mapper = mapper;
+        _userRepository = userRepository;
     }
 
     [HttpGet("users")]
@@ -29,7 +23,7 @@ public class UserController : ControllerBase
     {
         try
         {
-            var users = await _context.Users.ToListAsync() ?? throw new Exception("No users found");
+            var users = await _userRepository.GetUsers();
             return Ok(users);
         }
         catch (Exception ex)
@@ -42,7 +36,7 @@ public class UserController : ControllerBase
     {
         try
         {
-            var user = await _context.Users.FindAsync(userId) ?? throw new Exception("User not found");
+            var user = await _userRepository.GetUser(userId);
             return Ok(user);
         }
         catch (Exception ex)
@@ -57,9 +51,8 @@ public class UserController : ControllerBase
         {
             if (user == null) throw new Exception("User data is empty");
             var userToAdd = _mapper.Map<User>(user);
-
-            await _context.Users.AddAsync(userToAdd);
-            await _context.SaveChangesAsync();
+            _userRepository.AddEntity<User>(userToAdd);
+            await _userRepository.SaveChangesAsync();
             return CreatedAtAction(nameof(GetUser), new { userId = userToAdd.UserId }, userToAdd);
         }
         catch (Exception ex)
@@ -74,13 +67,14 @@ public class UserController : ControllerBase
     {
         try
         {
-            User userToUpdate = await _context.Users.FindAsync(userId) ?? throw new Exception("User not found");
-            userToUpdate.FirstName = user.FirstName;
-            userToUpdate.LastName = user.LastName;
-            userToUpdate.Email = user.Email;
-            userToUpdate.Gender = user.Gender;
-            userToUpdate.Active = user.Active;
-            return await _context.SaveChangesAsync() > 0 ? CreatedAtAction(nameof(GetUser), new { userId = userToUpdate.UserId }, userToUpdate) : throw new Exception("Error updating user");
+            var updatedUser = await _userRepository.UpdateEntity<User>(userId, user);
+            return await _userRepository.SaveChangesAsync() ? Ok(updatedUser) : throw new Exception("Error updating user");
+
+            // var userFromDb = await _userRepository.GetUser(userId) ?? throw new Exception("User not found");
+            // user.UserId = userFromDb.UserId;
+            // var userToUpdate = _mapper.Map<User>(user);
+            // _userRepository.UpdateEntity<User>(userToUpdate);
+            // return await _userRepository.SaveChangesAsync() ? CreatedAtAction(nameof(GetUser), new { userId = userToUpdate.UserId }, userToUpdate) : throw new Exception("Error updating user");
         }
         catch (Exception ex)
         {
@@ -93,9 +87,9 @@ public class UserController : ControllerBase
     {
         try
         {
-            User userToDelete = await _context.Users.FindAsync(userId) ?? throw new Exception("User not found");
-            _context.Users.Remove(userToDelete);
-            return await _context.SaveChangesAsync() > 0 ? Ok(userToDelete) : throw new Exception("Error deleting user");
+            User userToDelete = await _userRepository.GetUser(userId);
+            _userRepository.DeleteEntity<User>(userToDelete);
+            return await _userRepository.SaveChangesAsync() ? Ok(userToDelete) : throw new Exception("Error deleting user");
         }
         catch (Exception ex)
         {
