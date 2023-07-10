@@ -16,17 +16,26 @@ public class ApplicationDbContext : DbContext
     {
         if (!options.IsConfigured)
         {
-            options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"),
+            var DbUrl = Environment.GetEnvironmentVariable("DB_URL");
+            options.UseSqlServer(DbUrl,
             options => options.EnableRetryOnFailure());
         }
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // base.OnModelCreating(modelBuilder);
         modelBuilder.HasDefaultSchema("BasicWebAPI");
-        modelBuilder.Entity<User>().ToTable("Users");
-        modelBuilder.Entity<UserJobInfo>().ToTable("UsersJobInfo");
-        modelBuilder.Entity<UserSalary>().ToTable("UsersSalary");
+        modelBuilder.Entity<User>()
+        .ToTable("Users", "BasicWebAPI")
+        .HasKey(user => user.UserId);
+
+        modelBuilder.Entity<UserJobInfo>()
+        .ToTable("UsersJobInfo", "BasicWebAPI")
+        .HasKey(user => user.UserId);
+
+        modelBuilder.Entity<UserSalary>()
+        .ToTable("UsersSalary", "BasicWebAPI")
+        .HasKey(user => user.UserId);
     }
+
 }
