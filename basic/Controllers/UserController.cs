@@ -1,7 +1,8 @@
-using basic.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using basic.Models;
+using basic.Data;
+using basic.Dtos;
 
 namespace basic.Controllers;
 
@@ -25,7 +26,7 @@ public class UserController : ControllerBase
         }
         catch (Exception ex)
         {
-            return NotFound(ex.Message);
+            return BadRequest(ex.Message);
         }
     }
     [HttpGet("user/{userId}")]
@@ -38,21 +39,32 @@ public class UserController : ControllerBase
         }
         catch (Exception ex)
         {
-            return NotFound(ex.Message);
+            return BadRequest(ex.Message);
         }
     }
     [HttpPost("user")]
-    public async Task<IActionResult> CreateUser(User user)
+    public async Task<IActionResult> CreateUser(UserToAddDto user)
     {
         try
         {
-            await _context.Users.AddAsync(user);
+            if (user == null) throw new Exception("User data is empty");
+            var userToAdd = new User
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Gender = user.Gender,
+                Active = user.Active
+            };
+
+            await _context.Users.AddAsync(userToAdd);
             await _context.SaveChangesAsync();
-            return Ok(user);
+            return CreatedAtAction(nameof(GetUser), new { userId = userToAdd.UserId }, userToAdd);
         }
         catch (Exception ex)
         {
-            return NotFound(ex.Message);
+            Console.WriteLine(ex.Message);
+            return BadRequest(ex.Message);
         }
     }
 
@@ -67,12 +79,26 @@ public class UserController : ControllerBase
             userToUpdate.Email = user.Email;
             userToUpdate.Gender = user.Gender;
             userToUpdate.Active = user.Active;
-            await _context.SaveChangesAsync();
-            return Ok(userToUpdate);
+            return await _context.SaveChangesAsync() > 0 ? CreatedAtAction(nameof(GetUser), new { userId = userToUpdate.UserId }, userToUpdate) : throw new Exception("Error updating user");
         }
         catch (Exception ex)
         {
-            return NotFound(ex.Message);
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpDelete("user/{userId}")]
+    public async Task<IActionResult> DeleteUser(int userId)
+    {
+        try
+        {
+            User userToDelete = await _context.Users.FindAsync(userId) ?? throw new Exception("User not found");
+            _context.Users.Remove(userToDelete);
+            return await _context.SaveChangesAsync() > 0 ? Ok(userToDelete) : throw new Exception("Error deleting user");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
         }
     }
 }
