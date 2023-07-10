@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using basic.Models;
@@ -11,9 +12,16 @@ namespace basic.Controllers;
 public class UserController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
-    public UserController(IConfiguration configuration)
+    private readonly IMapper _mapper;
+    // public UserController(IConfiguration configuration, IMapper mapper)
+    // {
+    //     _context = new ApplicationDbContext(configuration);
+    //     _mapper = mapper;
+    // }
+    public UserController(IMapper mapper, ApplicationDbContext context)
     {
-        _context = new ApplicationDbContext(configuration);
+        _context = context;
+        _mapper = mapper;
     }
 
     [HttpGet("users")]
@@ -48,14 +56,7 @@ public class UserController : ControllerBase
         try
         {
             if (user == null) throw new Exception("User data is empty");
-            var userToAdd = new User
-            {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                Gender = user.Gender,
-                Active = user.Active
-            };
+            var userToAdd = _mapper.Map<User>(user);
 
             await _context.Users.AddAsync(userToAdd);
             await _context.SaveChangesAsync();
