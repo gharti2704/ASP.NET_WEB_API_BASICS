@@ -5,7 +5,7 @@
 namespace basic.Migrations
 {
     /// <inheritdoc />
-    public partial class Usermodels : Migration
+    public partial class Usertoaddautomapper : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -36,15 +36,15 @@ namespace basic.Migrations
                 schema: "BasicWebAPI",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     JobTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Department = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UsersJobInfo", x => x.Id);
+                    table.PrimaryKey("PK_UsersJobInfo", x => x.UserId);
                 });
 
             migrationBuilder.CreateTable(
@@ -52,15 +52,15 @@ namespace basic.Migrations
                 schema: "BasicWebAPI",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     Salary = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     AverageSalary = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UsersSalary", x => x.Id);
+                    table.PrimaryKey("PK_UsersSalary", x => x.UserId);
                 });
         }
 

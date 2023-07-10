@@ -1,3 +1,6 @@
+using basic.Data;
+using Microsoft.EntityFrameworkCore;
+
 DotNetEnv.Env.Load();
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +10,13 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+// Add AutoMapper
+builder.Services.AddAutoMapper(typeof(Program));
+// Add DBContext for sql server
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ?? throw new Exception("DB_CONNECTION_STRING not found in .env file"))
+);
+
 // Configure CORS
 builder.Services.AddCors(options =>
 {

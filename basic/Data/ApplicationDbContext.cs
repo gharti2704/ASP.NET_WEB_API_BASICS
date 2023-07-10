@@ -4,23 +4,26 @@ using basic.Models;
 namespace basic.Data;
 public class ApplicationDbContext : DbContext
 {
-    private readonly IConfiguration _configuration;
+    // private readonly IConfiguration _configuration;
     public DbSet<User> Users { get; set; }
     public DbSet<User> UsersJobInfo { get; set; }
     public DbSet<User> UsersSalary { get; set; }
-    public ApplicationDbContext(IConfiguration configuration)
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
-        _configuration = configuration;
     }
-    protected override void OnConfiguring(DbContextOptionsBuilder options)
-    {
-        if (!options.IsConfigured)
-        {
-            var DbUrl = Environment.GetEnvironmentVariable("DB_URL");
-            options.UseSqlServer(DbUrl,
-            options => options.EnableRetryOnFailure());
-        }
-    }
+    // public ApplicationDbContext(IConfiguration configuration)
+    // {
+    //     _configuration = configuration;
+    // }
+    // protected override void OnConfiguring(DbContextOptionsBuilder options)
+    // {
+    //     if (!options.IsConfigured)
+    //     {
+    //         var DbUrl = Environment.GetEnvironmentVariable("DB_URL");
+    //         options.UseSqlServer(DbUrl,
+    //         options => options.EnableRetryOnFailure());
+    //     }
+    // }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
