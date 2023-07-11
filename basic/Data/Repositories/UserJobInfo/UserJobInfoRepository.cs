@@ -4,52 +4,48 @@ using Microsoft.EntityFrameworkCore;
 namespace basic.Data;
 public class UserJobInfoRepository : IUserJobInfoReposiotry
 {
-    private readonly ApplicationDbContext _context;
-    public UserJobInfoRepository(ApplicationDbContext context)
-    {
-        _context = context;
-    }
-    public async void AddEntity<T>(T entityToAdd) where T : class
-    {
-        try
-        {
-            await _context.AddAsync(entityToAdd);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception($"Couldn't add entity: {ex.Message}");
-        }
-    }
+  private readonly ApplicationDbContext _context;
+  public UserJobInfoRepository(ApplicationDbContext context)
+  {
+    _context = context;
+  }
 
-    public void DeleteEntity<T>(T entityToDelete) where T : class
+  public async Task<UserJobInfo> GetUserJobInfo(int userJobInfoId)
+  {
+    try
     {
-        try
-        {
-            _context.Remove(entityToDelete);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception($"Couldn't delete entity: {ex.Message}");
-        }
+      return await _context.UserJobInfo.FindAsync(userJobInfoId) ?? throw new Exception($"Couldn't find user job info with id: {userJobInfoId}");
     }
+    catch (Exception ex)
+    {
+      throw new Exception($"Couldn't find user job info: {ex.Message}");
+    }
+  }
 
-    public Task<UserJobInfo> GetUserJobInfo(int userJobInfoId)
+  public async Task<IEnumerable<UserJobInfo>> GetUserJobInfos()
+  {
+    try
     {
-        throw new NotImplementedException();
+      return await _context.UserJobInfo.ToListAsync();
     }
+    catch (Exception ex)
+    {
+      throw new Exception($"Couldn't retrieve user job info: {ex.Message}");
+    }
+  }
 
-    public Task<IEnumerable<UserJobInfo>> GetUserJobInfos()
+  public async Task<UserJobInfo> UpdateUserJobInfo(int userJobInfoId, UserJobInfo userJobInfoToUpdate)
+  {
+    try
     {
-        throw new NotImplementedException();
+      var userJobInfo = await _context.UserJobInfo.FindAsync(userJobInfoId) ?? throw new Exception($"Couldn't find user job info with id: {userJobInfoId}");
+      userJobInfo.JobTitle = userJobInfoToUpdate.JobTitle;
+      userJobInfo.Department = userJobInfoToUpdate.Department;
+      return userJobInfo;
     }
-
-    public Task<bool> SaveChangesAsync()
+    catch (Exception ex)
     {
-        throw new NotImplementedException();
+      throw new Exception($"Couldn't update user job info: {ex.Message}");
     }
-
-    public Task<T> UpdateEntity<T>(int UserJobInfoId, T entityToUpdate) where T : class
-    {
-        throw new NotImplementedException();
-    }
+  }
 }

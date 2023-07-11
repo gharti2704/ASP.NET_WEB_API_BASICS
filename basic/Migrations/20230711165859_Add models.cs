@@ -5,13 +5,28 @@
 namespace basic.Migrations
 {
     /// <inheritdoc />
-    public partial class Usertoaddautomapper : Migration
+    public partial class Addmodels : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.EnsureSchema(
                 name: "BasicWebAPI");
+
+            migrationBuilder.CreateTable(
+                name: "UserJobInfo",
+                schema: "BasicWebAPI",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    JobTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Department = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserJobInfo", x => x.UserId);
+                });
 
             migrationBuilder.CreateTable(
                 name: "Users",
@@ -32,35 +47,18 @@ namespace basic.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UsersJobInfo",
+                name: "UserSalary",
                 schema: "BasicWebAPI",
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    JobTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Department = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Salary = table.Column<decimal>(type: "decimal(5,2)", nullable: false),
+                    AverageSalary = table.Column<decimal>(type: "decimal(5,2)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UsersJobInfo", x => x.UserId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UsersSalary",
-                schema: "BasicWebAPI",
-                columns: table => new
-                {
-                    UserId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    Salary = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    AverageSalary = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UsersSalary", x => x.UserId);
+                    table.PrimaryKey("PK_UserSalary", x => x.UserId);
                 });
         }
 
@@ -68,15 +66,15 @@ namespace basic.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "UserJobInfo",
+                schema: "BasicWebAPI");
+
+            migrationBuilder.DropTable(
                 name: "Users",
                 schema: "BasicWebAPI");
 
             migrationBuilder.DropTable(
-                name: "UsersJobInfo",
-                schema: "BasicWebAPI");
-
-            migrationBuilder.DropTable(
-                name: "UsersSalary",
+                name: "UserSalary",
                 schema: "BasicWebAPI");
         }
     }
