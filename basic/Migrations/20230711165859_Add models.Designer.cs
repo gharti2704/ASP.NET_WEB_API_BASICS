@@ -11,15 +11,14 @@ using basic.Data;
 namespace basic.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230710173219_User to add auto mapper")]
-    partial class Usertoaddautomapper
+    [Migration("20230711165859_Add models")]
+    partial class Addmodels
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("BasicWebAPI")
                 .HasAnnotation("ProductVersion", "7.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
@@ -69,16 +68,13 @@ namespace basic.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
                     b.Property<string>("JobTitle")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId");
 
-                    b.ToTable("UsersJobInfo", "BasicWebAPI");
+                    b.ToTable("UserJobInfo", "BasicWebAPI");
                 });
 
             modelBuilder.Entity("basic.Models.UserSalary", b =>
@@ -90,17 +86,14 @@ namespace basic.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
                     b.Property<decimal>("AverageSalary")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
+                        .HasColumnType("decimal(5, 2)");
 
                     b.Property<decimal>("Salary")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(5, 2)");
 
                     b.HasKey("UserId");
 
-                    b.ToTable("UsersSalary", "BasicWebAPI");
+                    b.ToTable("UserSalary", "BasicWebAPI");
                 });
 #pragma warning restore 612, 618
         }
