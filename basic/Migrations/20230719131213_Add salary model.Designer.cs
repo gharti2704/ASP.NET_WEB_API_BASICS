@@ -11,8 +11,8 @@ using basic.Data;
 namespace basic.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230711165859_Add models")]
-    partial class Addmodels
+    [Migration("20230719131213_Add salary model")]
+    partial class Addsalarymodel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -93,7 +93,7 @@ namespace basic.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("UserSalary", "BasicWebAPI");
+                    b.ToTable("UserSalaries", "BasicWebAPI");
                 });
 #pragma warning restore 612, 618
         }

@@ -7,7 +7,7 @@ public class ApplicationDbContext : DbContext
   // private readonly IConfiguration _configuration;
   public DbSet<User> Users { get; set; } = null!;
   public DbSet<UserJobInfo> UserJobInfo { get; set; } = null!;
-  public DbSet<UserSalary> UserSalary { get; set; } = null!;
+  public DbSet<UserSalary> UserSalaries { get; set; } = null!;
   public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
   {
   }
@@ -37,7 +37,7 @@ public class ApplicationDbContext : DbContext
     .HasKey(user => user.UserId);
 
     modelBuilder.Entity<UserSalary>()
-    .ToTable("UserSalary", "BasicWebAPI")
+    .ToTable("UserSalaries", "BasicWebAPI")
     .HasKey(user => user.UserId);
   }
 

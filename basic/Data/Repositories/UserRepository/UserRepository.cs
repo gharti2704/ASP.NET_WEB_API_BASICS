@@ -1,7 +1,7 @@
 using basic.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace basic.Data;
+namespace basic.Data.Repositories.UserRepository;
 public class UserRepository : IUserRepository
 {
   private readonly ApplicationDbContext _context;

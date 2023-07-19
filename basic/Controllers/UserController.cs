@@ -1,7 +1,8 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using basic.Models;
-using basic.Data;
+using basic.Data.Repositories.Common;
+using basic.Data.Repositories.UserRepository;
 using basic.Dtos;
 
 namespace basic.Controllers;

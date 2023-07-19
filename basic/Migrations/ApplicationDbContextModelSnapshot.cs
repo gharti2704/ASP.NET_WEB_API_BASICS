@@ -90,7 +90,7 @@ namespace basic.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("UserSalary", "BasicWebAPI");
+                    b.ToTable("UserSalaries", "BasicWebAPI");
                 });
 #pragma warning restore 612, 618
         }

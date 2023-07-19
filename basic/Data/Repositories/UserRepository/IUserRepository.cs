@@ -1,6 +1,6 @@
 using basic.Models;
 
-namespace basic.Data;
+namespace basic.Data.Repositories.UserRepository;
 public interface IUserRepository
 {
   Task<IEnumerable<User>> GetUsers();

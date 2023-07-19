@@ -5,7 +5,7 @@
 namespace basic.Migrations
 {
     /// <inheritdoc />
-    public partial class Addmodels : Migration
+    public partial class Addsalarymodel : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -47,7 +47,7 @@ namespace basic.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserSalary",
+                name: "UserSalaries",
                 schema: "BasicWebAPI",
                 columns: table => new
                 {
@@ -58,7 +58,7 @@ namespace basic.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserSalary", x => x.UserId);
+                    table.PrimaryKey("PK_UserSalaries", x => x.UserId);
                 });
         }
 
@@ -74,7 +74,7 @@ namespace basic.Migrations
                 schema: "BasicWebAPI");
 
             migrationBuilder.DropTable(
-                name: "UserSalary",
+                name: "UserSalaries",
                 schema: "BasicWebAPI");
         }
     }
