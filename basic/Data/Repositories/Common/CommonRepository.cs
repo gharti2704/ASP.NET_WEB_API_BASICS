@@ -1,4 +1,4 @@
-namespace basic.Data;
+namespace basic.Data.Repositories.Common;
 public class CommonRepository : ICommonRepository
 {
   private readonly ApplicationDbContext _context;

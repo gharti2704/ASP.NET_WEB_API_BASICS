@@ -7,7 +7,8 @@ public class ApplicationDbContext : DbContext
   // private readonly IConfiguration _configuration;
   public DbSet<User> Users { get; set; } = null!;
   public DbSet<UserJobInfo> UserJobInfo { get; set; } = null!;
-  public DbSet<UserSalary> UserSalary { get; set; } = null!;
+  public DbSet<UserSalary> UserSalaries { get; set; } = null!;
+  public DbSet<Auth> Auths{ get; set; } = null!;
   public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
   {
   }
@@ -27,7 +28,7 @@ public class ApplicationDbContext : DbContext
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
-    // modelBuilder.HasDefaultSchema("BasicWebAPI");
+    modelBuilder.HasDefaultSchema("BasicWebAPI");
     modelBuilder.Entity<User>()
     .ToTable("Users", "BasicWebAPI")
     .HasKey(user => user.UserId);
@@ -37,8 +38,12 @@ public class ApplicationDbContext : DbContext
     .HasKey(user => user.UserId);
 
     modelBuilder.Entity<UserSalary>()
-    .ToTable("UserSalary", "BasicWebAPI")
+    .ToTable("UserSalaries", "BasicWebAPI")
     .HasKey(user => user.UserId);
+
+     modelBuilder.Entity<Auth>()
+    .ToTable("Auths", "BasicWebAPI")
+    .HasKey(user => user.Email);
   }
 
 }

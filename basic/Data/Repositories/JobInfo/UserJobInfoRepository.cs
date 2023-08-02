@@ -1,8 +1,8 @@
 using basic.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace basic.Data;
-public class UserJobInfoRepository : IUserJobInfoReposiotry
+namespace basic.Data.Repositories.JobInfo;
+public class UserJobInfoRepository : IUserJobInfoRepository
 {
   private readonly ApplicationDbContext _context;
   public UserJobInfoRepository(ApplicationDbContext context)
@@ -26,7 +26,8 @@ public class UserJobInfoRepository : IUserJobInfoReposiotry
   {
     try
     {
-      return await _context.UserJobInfo.ToListAsync();
+     var values = await _context.UserJobInfo.ToListAsync();
+      return values;
     }
     catch (Exception ex)
     {
@@ -38,10 +39,10 @@ public class UserJobInfoRepository : IUserJobInfoReposiotry
   {
     try
     {
-      var userJobInfo = await _context.UserJobInfo.FindAsync(userJobInfoId) ?? throw new Exception($"Couldn't find user job info with id: {userJobInfoId}");
-      userJobInfo.JobTitle = userJobInfoToUpdate.JobTitle;
-      userJobInfo.Department = userJobInfoToUpdate.Department;
-      return userJobInfo;
+      var jobInfo = await _context.UserJobInfo.FindAsync(userJobInfoId) ?? throw new Exception($"Couldn't find user job info with id: {userJobInfoId}");
+      jobInfo.JobTitle = userJobInfoToUpdate.JobTitle;
+      jobInfo.Department = userJobInfoToUpdate.Department;
+      return jobInfo;
     }
     catch (Exception ex)
     {

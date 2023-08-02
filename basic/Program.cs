@@ -1,4 +1,8 @@
 using basic.Data;
+using basic.Data.Repositories.Common;
+using basic.Data.Repositories.UserRepository;
+using basic.Data.Repositories.JobInfo;
+using basic.Data.Repositories.Salary;
 using Microsoft.EntityFrameworkCore;
 
 // Load environment variables from .env file
@@ -16,7 +20,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Inject Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICommonRepository, CommonRepository>();
-builder.Services.AddScoped<IUserJobInfoReposiotry, UserJobInfoRepository>();
+builder.Services.AddScoped<IUserJobInfoRepository, UserJobInfoRepository>();
+builder.Services.AddScoped<IUserSalaryRepository, UserSalaryRepository>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -24,16 +29,16 @@ builder.Services.AddSwaggerGen();
 // Configure CORS
 builder.Services.AddCors(options =>
 {
-  options.AddPolicy("DevCors", builder =>
+  options.AddPolicy("DevCors", build =>
   {
-    builder.WithOrigins("http://localhost:3000", "https://localhost:5000")
+    build.WithOrigins("http://localhost:3000", "https://localhost:5000")
           .AllowAnyMethod()
           .AllowAnyHeader()
           .AllowCredentials();
   });
-  options.AddPolicy("ProdCors", builder =>
+  options.AddPolicy("ProdCors", build =>
   {
-    builder.WithOrigins("https://mydomain.com")
+    build.WithOrigins("https://mydomain.com")
           .AllowAnyMethod()
           .AllowAnyHeader()
           .AllowCredentials();

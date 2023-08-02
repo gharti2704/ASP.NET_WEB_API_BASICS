@@ -1,13 +1,14 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using basic.Models;
-using basic.Data;
+using basic.Data.Repositories.Common;
+using basic.Data.Repositories.UserRepository;
 using basic.Dtos;
 
 namespace basic.Controllers;
 
 [ApiController]
-[Route("api")]
+[Route("api/[controller]")]
 public class UserController : ControllerBase
 {
   private readonly IMapper _mapper;
@@ -20,7 +21,7 @@ public class UserController : ControllerBase
     _commonRepository = commonRepository;
   }
 
-  [HttpGet("users")]
+  [HttpGet]
   public async Task<IActionResult> GetUsers()
   {
     try
@@ -33,7 +34,7 @@ public class UserController : ControllerBase
       return BadRequest(ex.Message);
     }
   }
-  [HttpGet("user/{userId}")]
+  [HttpGet("{userId}")]
   public async Task<IActionResult> GetUser(int userId)
   {
     try
@@ -46,7 +47,7 @@ public class UserController : ControllerBase
       return BadRequest(ex.Message);
     }
   }
-  [HttpPost("user")]
+  [HttpPost]
   public async Task<IActionResult> CreateUser(UserToAddDto user)
   {
     try
@@ -64,7 +65,7 @@ public class UserController : ControllerBase
     }
   }
 
-  [HttpPut("user/{userId}")]
+  [HttpPut("{userId}")]
   public async Task<IActionResult> UpdateUser(int userId, User user)
   {
     try
@@ -78,7 +79,7 @@ public class UserController : ControllerBase
     }
   }
 
-  [HttpDelete("user/{userId}")]
+  [HttpDelete("{userId}")]
   public async Task<IActionResult> DeleteUser(int userId)
   {
     try

@@ -5,13 +5,27 @@
 namespace basic.Migrations
 {
     /// <inheritdoc />
-    public partial class Addmodels : Migration
+    public partial class initialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.EnsureSchema(
                 name: "BasicWebAPI");
+
+            migrationBuilder.CreateTable(
+                name: "Auths",
+                schema: "BasicWebAPI",
+                columns: table => new
+                {
+                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PasswordSalt = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Auths", x => x.Email);
+                });
 
             migrationBuilder.CreateTable(
                 name: "UserJobInfo",
@@ -47,7 +61,7 @@ namespace basic.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserSalary",
+                name: "UserSalaries",
                 schema: "BasicWebAPI",
                 columns: table => new
                 {
@@ -58,13 +72,17 @@ namespace basic.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserSalary", x => x.UserId);
+                    table.PrimaryKey("PK_UserSalaries", x => x.UserId);
                 });
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Auths",
+                schema: "BasicWebAPI");
+
             migrationBuilder.DropTable(
                 name: "UserJobInfo",
                 schema: "BasicWebAPI");
@@ -74,7 +92,7 @@ namespace basic.Migrations
                 schema: "BasicWebAPI");
 
             migrationBuilder.DropTable(
-                name: "UserSalary",
+                name: "UserSalaries",
                 schema: "BasicWebAPI");
         }
     }

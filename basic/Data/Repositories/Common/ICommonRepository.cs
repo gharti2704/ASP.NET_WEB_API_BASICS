@@ -1,4 +1,4 @@
-namespace basic.Data;
+namespace basic.Data.Repositories.Common;
 public interface ICommonRepository
 {
   public Task<bool> SaveChangesAsync();

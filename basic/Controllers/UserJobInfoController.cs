@@ -1,7 +1,8 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using basic.Models;
-using basic.Data;
+using basic.Data.Repositories.Common;
+using basic.Data.Repositories.JobInfo;
 using basic.Dtos;
 
 namespace basic.Controllers;
@@ -12,22 +13,22 @@ namespace basic.Controllers;
 public class UserJobInfoController : ControllerBase
 {
   private readonly IMapper _mapper;
-  private readonly IUserJobInfoReposiotry _userJobInfoReposiotry;
+  private readonly IUserJobInfoRepository _jobInfo;
   private readonly ICommonRepository _commonRepository;
-  public UserJobInfoController(IMapper mapper, IUserJobInfoReposiotry userJobInfoReposiotry, ICommonRepository commonRepository)
+  public UserJobInfoController(IMapper mapper, IUserJobInfoRepository jobInfo, ICommonRepository commonRepository)
   {
     _mapper = mapper;
-    _userJobInfoReposiotry = userJobInfoReposiotry;
+    _jobInfo = jobInfo;
     _commonRepository = commonRepository;
   }
 
-  [HttpGet("usersjobinfo")]
+  [HttpGet("jobsinfo")]
   public async Task<IActionResult> GetUserJobInfos()
   {
     try
     {
-      var userJobInfoItems = await _userJobInfoReposiotry.GetUserJobInfos();
-      return Ok(userJobInfoItems);
+      var jobInfoItems = await _jobInfo.GetUserJobInfos();
+      return Ok(jobInfoItems);
     }
     catch (Exception ex)
     {
@@ -35,13 +36,13 @@ public class UserJobInfoController : ControllerBase
     }
   }
 
-  [HttpGet("usersjobinfo/{userId}")]
+  [HttpGet("jobsinfo/{userId}")]
   public async Task<UserJobInfo> GetUserJobInfo(int userId)
   {
     try
     {
-      var userJobInfoItem = await _userJobInfoReposiotry.GetUserJobInfo(userId);
-      return userJobInfoItem;
+      var jobInfoItem = await _jobInfo.GetUserJobInfo(userId);
+      return jobInfoItem;
     }
     catch (Exception ex)
     {
@@ -49,14 +50,14 @@ public class UserJobInfoController : ControllerBase
     }
   }
 
-  [HttpPut("usersjobinfo/{userId}")]
+  [HttpPut("jobsinfo/{userId}")]
   public async Task<IActionResult> UpdateUserJobInfo(int userId, UserJobInfo userJobInfo)
   {
     try
     {
-      var userJobInfoFromRepo = await _userJobInfoReposiotry.GetUserJobInfo(userId);
-      var userJobInfoUpdated = await _userJobInfoReposiotry.UpdateUserJobInfo(userId, userJobInfo);
-      return CreatedAtAction(nameof(GetUserJobInfo), new { userId = userJobInfoUpdated.UserId }, userJobInfoUpdated);
+      // var userJobInfoFromRepo = await _jobInfo.GetUserJobInfo(userId);
+      var updatedJobInfo = await _jobInfo.UpdateUserJobInfo(userId, userJobInfo);
+      return CreatedAtAction(nameof(GetUserJobInfo), new { userId = updatedJobInfo.UserId }, updatedJobInfo);
     }
     catch (Exception ex)
     {
@@ -64,16 +65,16 @@ public class UserJobInfoController : ControllerBase
     }
   }
 
-  [HttpPost("usersjobinfo")]
+  [HttpPost("jobsinfo")]
   public async Task<IActionResult> CreateUserJobInfo(UserJobInfoToAddDto userJobInfo)
   {
     try
     {
       if (userJobInfo == null) throw new Exception("User job info data is empty");
-      var userJobInfoToAdd = _mapper.Map<UserJobInfo>(userJobInfo);
-      _commonRepository.AddEntity<UserJobInfo>(userJobInfoToAdd);
+      var jobInfoToAdd = _mapper.Map<UserJobInfo>(userJobInfo);
+      _commonRepository.AddEntity<UserJobInfo>(jobInfoToAdd);
       await _commonRepository.SaveChangesAsync();
-      return CreatedAtAction(nameof(CreateUserJobInfo), new { userId = userJobInfoToAdd.UserId }, userJobInfoToAdd);
+      return CreatedAtAction(nameof(CreateUserJobInfo), new { userId = jobInfoToAdd.UserId }, jobInfoToAdd);
     }
     catch (Exception ex)
     {
@@ -81,13 +82,13 @@ public class UserJobInfoController : ControllerBase
     }
   }
 
-  [HttpDelete("usersjobinfo/{userId}")]
+  [HttpDelete("jobsinfo/{userId}")]
   public async Task<IActionResult> DeleteUserJobInfo(int userId)
   {
     try
     {
-      var userJobInfoFromRepo = await _userJobInfoReposiotry.GetUserJobInfo(userId);
-      _commonRepository.DeleteEntity<UserJobInfo>(userJobInfoFromRepo);
+      var jobInfoFromRepo = await _jobInfo.GetUserJobInfo(userId);
+      _commonRepository.DeleteEntity<UserJobInfo>(jobInfoFromRepo);
       await _commonRepository.SaveChangesAsync();
       return Ok();
     }
