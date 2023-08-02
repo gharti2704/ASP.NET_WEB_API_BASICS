@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using basic.Models;
 using basic.Data;
+using basic.Data.Repositories.Salary;
 using basic.Dtos;
 using Microsoft.AspNetCore.Http.HttpResults;
 
@@ -11,18 +12,23 @@ namespace basic.Controllers;
 [Route("api")]
 public class UserSalaryController : ControllerBase
 {
+    private readonly IUserSalaryRepository _salaryRepository;
+    public UserSalaryController(IUserSalaryRepository salaryRepository)
+    {
+        _salaryRepository = salaryRepository;
+    }
+    
     [HttpGet("salary")]
     public async Task<IActionResult> GetUserSalary()
     {
         try
         {
-            await Task.Delay(1000);
-            return Ok("100");
+            var salaryItems = await _salaryRepository.GetUserSalaries();
+            return StatusCode(200, salaryItems);
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            return StatusCode(500, e.Message);
         }
     }
 };

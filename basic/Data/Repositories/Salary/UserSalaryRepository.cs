@@ -1,4 +1,5 @@
 using basic.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace basic.Data.Repositories.Salary;
 public class UserSalaryRepository : IUserSalaryRepository
@@ -12,7 +13,7 @@ public class UserSalaryRepository : IUserSalaryRepository
     {
         try
         {
-            return await Task.FromResult(_context.UserSalaries.ToList() as IEnumerable<UserSalary>);
+            return await _context.UserSalaries.ToListAsync();
         }
         catch (Exception e)
         {

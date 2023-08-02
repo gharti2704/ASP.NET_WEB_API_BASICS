@@ -2,6 +2,7 @@ using basic.Data;
 using basic.Data.Repositories.Common;
 using basic.Data.Repositories.UserRepository;
 using basic.Data.Repositories.JobInfo;
+using basic.Data.Repositories.Salary;
 using Microsoft.EntityFrameworkCore;
 
 // Load environment variables from .env file
@@ -20,6 +21,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICommonRepository, CommonRepository>();
 builder.Services.AddScoped<IUserJobInfoRepository, UserJobInfoRepository>();
+builder.Services.AddScoped<IUserSalaryRepository, UserSalaryRepository>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
