@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using AutoMapper;
+using basic.Data.Repositories.Common;
 
 namespace basic.Controllers;
 
@@ -16,9 +18,13 @@ namespace basic.Controllers;
 public class AuthController : ControllerBase
 {
   private readonly ApplicationDbContext _context;
-  public AuthController(ApplicationDbContext context)
+  private readonly IMapper _mapper;
+  private readonly ICommonRepository _commonRepository;
+  public AuthController(ApplicationDbContext context, IMapper mapper, ICommonRepository commonRepository)
   {
     _context = context;
+    _mapper = mapper;
+    _commonRepository = commonRepository;
   }
 
   [HttpPost("register")]
@@ -79,8 +85,30 @@ public class AuthController : ControllerBase
 
     if (await Helpers.Helpers.ExecuteSqlWithParameters(sqlAddAuth, sqlParameters))
     {
-      return Ok();
+      try
+      {
+        var user = new User()
+        {
+          Email = userForRegistrationDto.Email,
+          FirstName = userForRegistrationDto.FirstName,
+          LastName = userForRegistrationDto.LastName,
+          Gender = userForRegistrationDto.Gender,
+        };
+
+        var userToAdd = _mapper.Map<User>(user);
+        _commonRepository.AddEntity<User>(userToAdd);
+        await _commonRepository.SaveChangesAsync();
+        return CreatedAtAction(nameof(Register), new { userId = userToAdd.UserId }, userToAdd);
+      }
+      catch (System.Exception)
+      {
+
+        throw new Exception("Failed to add user");
+
+      }
     }
+
+    throw new Exception("Failed to register user.");
     //Store Procedure
     // await _context.Database.ExecuteSqlRawAsync("EXEC dbo.spUsers_Insert @PasswordHash, @PasswordSalt", sqlParameters);
     // var userToCreate = new User
@@ -89,7 +117,7 @@ public class AuthController : ControllerBase
     // };
     // var createdUser = await _context.Users.AddAsync(userToCreate);
     // await _context.SaveChangesAsync();
-    throw new Exception("Failed to register user");
+
   }
 
   [HttpPost("login")]
@@ -98,7 +126,7 @@ public class AuthController : ControllerBase
     var userForConfirmation = await _context.Auths.FirstOrDefaultAsync(u => u.Email == userForLoginDto.Email);
     if (userForConfirmation == null)
     {
-      return Unauthorized();
+      return Unauthorized("Email or password didn't match");
     }
     var passwordHash = GetPasswordHash(userForLoginDto.Password, userForConfirmation.PasswordSalt);
     for (int index = 0; index < passwordHash.Length; index++)
