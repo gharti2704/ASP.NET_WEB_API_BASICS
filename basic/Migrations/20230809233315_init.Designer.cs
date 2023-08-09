@@ -11,8 +11,8 @@ using basic.Data;
 namespace basic.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230731202012_initialCreate")]
-    partial class initialCreate
+    [Migration("20230809233315_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,10 +31,6 @@ namespace basic.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PasswordSalt")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

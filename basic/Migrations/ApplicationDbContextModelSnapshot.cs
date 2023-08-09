@@ -31,10 +31,6 @@ namespace basic.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PasswordSalt")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Email");
 
                     b.ToTable("Auths", "BasicWebAPI");

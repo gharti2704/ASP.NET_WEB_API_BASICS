@@ -2,8 +2,7 @@ namespace basic.Models
 {
   public class Auth
   {
-    public string? Email { get; set; }
-    public byte[] PasswordHash { get; set; } = Array.Empty<byte>();
-    public byte[] PasswordSalt { get; set; } = Array.Empty<byte>();
+    public string Email { get; set; } = String.Empty;
+    public string PasswordHash { get; set; } = String.Empty;
   }
 }
