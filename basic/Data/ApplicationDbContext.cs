@@ -8,7 +8,7 @@ public class ApplicationDbContext : DbContext
   public DbSet<User> Users { get; set; } = null!;
   public DbSet<UserJobInfo> UserJobInfo { get; set; } = null!;
   public DbSet<UserSalary> UserSalaries { get; set; } = null!;
-  public DbSet<Auth> Auths{ get; set; } = null!;
+  public DbSet<Auth> Auths { get; set; } = null!;
   public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
   {
   }
@@ -41,9 +41,9 @@ public class ApplicationDbContext : DbContext
     .ToTable("UserSalaries", "BasicWebAPI")
     .HasKey(user => user.UserId);
 
-     modelBuilder.Entity<Auth>()
-    .ToTable("Auths", "BasicWebAPI")
-    .HasKey(user => user.Email);
+    modelBuilder.Entity<Auth>()
+      .ToTable("Auths", "BasicWebAPI")
+      .HasKey(user => user.Email);
   }
 
 }
