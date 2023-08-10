@@ -1,9 +1,12 @@
+using System.Text;
 using basic.Data;
 using basic.Data.Repositories.Common;
 using basic.Data.Repositories.UserRepository;
 using basic.Data.Repositories.JobInfo;
 using basic.Data.Repositories.Salary;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 // Load environment variables from .env file
 DotNetEnv.Env.Load();
@@ -23,7 +26,20 @@ builder.Services.AddScoped<ICommonRepository, CommonRepository>();
 builder.Services.AddScoped<IUserJobInfoRepository, UserJobInfoRepository>();
 builder.Services.AddScoped<IUserSalaryRepository, UserSalaryRepository>();
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+//Configure jwt authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+  .AddJwtBearer(options =>
+  {
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+      ValidateIssuerSigningKey = true,
+      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_TOKEN_KEY")!)),
+      ValidateIssuer = false,
+      ValidateAudience = false,
+    };
+  });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 // Configure CORS
@@ -31,7 +47,7 @@ builder.Services.AddCors(options =>
 {
   options.AddPolicy("DevCors", build =>
   {
-    build.WithOrigins("http://localhost:3000", "https://localhost:5000")
+    build.WithOrigins("http://localhost:3000", "https://localhost:8000")
           .AllowAnyMethod()
           .AllowAnyHeader()
           .AllowCredentials();
@@ -60,6 +76,8 @@ else
   app.UseHttpsRedirection();
 }
 
+//Make sure UseAuthentication comes before UseAuthorization
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
