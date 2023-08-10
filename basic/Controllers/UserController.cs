@@ -54,7 +54,7 @@ public class UserController : ControllerBase
     {
       if (user == null) throw new Exception("User data is empty");
       var userToAdd = _mapper.Map<User>(user);
-      _commonRepository.AddEntity<User>(userToAdd);
+      _commonRepository.AddEntity(userToAdd);
       await _commonRepository.SaveChangesAsync();
       return CreatedAtAction(nameof(GetUser), new { userId = userToAdd.UserId }, userToAdd);
     }
