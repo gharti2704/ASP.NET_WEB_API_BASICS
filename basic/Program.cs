@@ -3,6 +3,7 @@ using basic.Data;
 using basic.Data.Repositories.Common;
 using basic.Data.Repositories.UserRepository;
 using basic.Data.Repositories.JobInfo;
+using basic.Data.Repositories.Posts;
 using basic.Data.Repositories.Salary;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICommonRepository, CommonRepository>();
 builder.Services.AddScoped<IUserJobInfoRepository, UserJobInfoRepository>();
 builder.Services.AddScoped<IUserSalaryRepository, UserSalaryRepository>();
+builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddControllers();
 
 //Configure jwt authentication
