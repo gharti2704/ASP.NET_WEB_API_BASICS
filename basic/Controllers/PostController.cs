@@ -90,13 +90,13 @@ public class PostController : ControllerBase
     public async Task<ActionResult<Post>> CreatePost(PostToAddDto post)
     {
         var postToCreate = _mapper.Map<Post>(post);
-        postToCreate.UserId = int.Parse(this.User.FindFirst("userId").Value);
+        postToCreate.UserId = int.Parse(this.User.FindFirst("userId")!.Value);
         postToCreate.PostCreated = DateTime.Now;
         postToCreate.PostUpdated = DateTime.Now;
 
         try
         {
-            _commonRepository.AddEntity<Post>(postToCreate);
+            _commonRepository.AddEntity(postToCreate);
             await _commonRepository.SaveChangesAsync();
             return CreatedAtAction(nameof(GetPost), new { postId = postToCreate.PostId }, postToCreate);
         }
@@ -113,7 +113,7 @@ public class PostController : ControllerBase
         try
         {
             var postToEdit = await _context.Posts.FirstOrDefaultAsync(p =>
-                p.PostId == post.PostId && p.UserId.ToString() == this.User.FindFirst("userId").Value);
+                p.PostId == post.PostId && p.UserId.ToString() == this.User.FindFirst("userId")!.Value);
             if (postToEdit is null) throw new Exception("Post not found");
             postToEdit.PostContent = post.PostContent;
             postToEdit.PostTitle = post.PostTitle;
@@ -134,13 +134,29 @@ public class PostController : ControllerBase
         try
         {
             var postToDelete = await _postRepository.GetPost(postId);
-           _commonRepository.DeleteEntity<Post>(postToDelete);
+           _commonRepository.DeleteEntity(postToDelete);
            await _commonRepository.SaveChangesAsync();
            return Ok("Successfully deleted the post");
         }
         catch (Exception e)
         {
             
+            throw new Exception(e.Message);
+        }
+    }
+
+    [HttpGet("search/{searchTerm}")]
+    public ActionResult<Post> PostBySearch(string searchTerm)
+    {
+        try
+        {
+            var posts = _context.Posts.Where(
+                p => p.PostTitle.Contains(searchTerm) || p.PostContent.Contains(searchTerm));
+
+            return Ok(posts);
+        }
+        catch (Exception e)
+        {
             throw new Exception(e.Message);
         }
     }
