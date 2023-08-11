@@ -21,7 +21,7 @@ public class UserController : ControllerBase
     _commonRepository = commonRepository;
   }
 
-  [HttpGet]
+  [HttpGet("users")]
   public async Task<IActionResult> GetUsers()
   {
     try
@@ -34,7 +34,7 @@ public class UserController : ControllerBase
       return BadRequest(ex.Message);
     }
   }
-  [HttpGet("{userId}")]
+  [HttpGet("{userId:int:min(1)}")]
   public async Task<IActionResult> GetUser(int userId)
   {
     try
@@ -60,12 +60,11 @@ public class UserController : ControllerBase
     }
     catch (Exception ex)
     {
-      Console.WriteLine(ex.Message);
       return BadRequest(ex.Message);
     }
   }
 
-  [HttpPut("{userId}")]
+  [HttpPut("{userId:int:min(1)}")]
   public async Task<IActionResult> UpdateUser(int userId, User user)
   {
     try
@@ -79,7 +78,7 @@ public class UserController : ControllerBase
     }
   }
 
-  [HttpDelete("{userId}")]
+  [HttpDelete("{userId:int:min(1)}")]
   public async Task<IActionResult> DeleteUser(int userId)
   {
     try

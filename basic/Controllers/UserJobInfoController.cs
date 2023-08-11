@@ -36,7 +36,7 @@ public class UserJobInfoController : ControllerBase
     }
   }
 
-  [HttpGet("jobsinfo/{userId}")]
+  [HttpGet("jobsinfo/{userId:int:min(1)}")]
   public async Task<UserJobInfo> GetUserJobInfo(int userId)
   {
     try
@@ -50,7 +50,7 @@ public class UserJobInfoController : ControllerBase
     }
   }
 
-  [HttpPut("jobsinfo/{userId}")]
+  [HttpPut("jobsinfo/{userId:int:min(1)}")]
   public async Task<IActionResult> UpdateUserJobInfo(int userId, UserJobInfo userJobInfo)
   {
     try
@@ -82,7 +82,7 @@ public class UserJobInfoController : ControllerBase
     }
   }
 
-  [HttpDelete("jobsinfo/{userId}")]
+  [HttpDelete("jobsinfo/{userId:int:min(1)}")]
   public async Task<IActionResult> DeleteUserJobInfo(int userId)
   {
     try

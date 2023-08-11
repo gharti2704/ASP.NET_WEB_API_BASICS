@@ -17,8 +17,8 @@ public class UserSalaryRepository : IUserSalaryRepository
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            
+            throw new Exception(e.Message);
         }
     }
     
@@ -30,8 +30,8 @@ public class UserSalaryRepository : IUserSalaryRepository
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            
+            throw new Exception(e.Message);
         }
     }
     
@@ -43,8 +43,8 @@ public class UserSalaryRepository : IUserSalaryRepository
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            
+            throw new Exception(e.Message);
         }
     }
     
@@ -58,8 +58,8 @@ public class UserSalaryRepository : IUserSalaryRepository
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            
+            throw new Exception(e.Message);
         }
     }
     
@@ -73,8 +73,8 @@ public class UserSalaryRepository : IUserSalaryRepository
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            
+            throw new Exception(e.Message);
         }
     }
 }
