@@ -53,7 +53,8 @@ public class AuthController : ControllerBase
       return BadRequest("Email already exists");
     }
 
-    var passwordHash = BCrypt.Net.BCrypt.HashPassword(userForRegistrationDto.Password);
+    var passwordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(userForRegistrationDto.Password, BCrypt.Net.HashType.SHA512, 15);
+      // HashPassword(userForRegistrationDto.Password);
 
     var authToAdd = new Auth
     {
@@ -86,7 +87,8 @@ public class AuthController : ControllerBase
         return Unauthorized();
       }
 
-      var isCorrectPassword = BCrypt.Net.BCrypt.Verify(userForLoginDto.Password, userForConfirmation.PasswordHash);
+      var isCorrectPassword = BCrypt.Net.BCrypt.EnhancedVerify(userForLoginDto.Password, userForConfirmation.PasswordHash, BCrypt.Net.HashType.SHA512);
+        // Verify(userForLoginDto.Password, userForConfirmation.PasswordHash);
         
       return isCorrectPassword ? Ok(new Dictionary<string, string>{
         {"token", _authHelper.CreateToken(user.UserId)}
