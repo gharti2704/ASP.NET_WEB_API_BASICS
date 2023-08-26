@@ -11,13 +11,48 @@ public class UserRepository : IUserRepository
   }
   public async Task<IEnumerable<User>> GetUsers()
   {
-    return await _context.Users.ToListAsync();
+    try
+    {
+      return await _context.Users.ToListAsync();
+
+    }
+    catch (Exception e)
+    {
+      Console.WriteLine(e);
+      throw new Exception(e.Message);
+    }
+  }
+  
+  public async Task<IEnumerable<UserComplete>> GetCompleteUsers()
+  {
+    try
+    {
+      return await _context.UsersComplete.FromSqlInterpolated($"EXEC BasicWebAPI.spUsers_Get").ToListAsync();
+    }
+    catch (Exception e)
+    {
+      Console.WriteLine(e);
+      throw new Exception(e.Message);
+    }
   }
   public async Task<User> GetUser(int userId)
   {
     try
     {
       return await _context.Users.FindAsync(userId) ?? throw new Exception("User not found");
+    }
+    catch (Exception ex)
+    {
+      throw new Exception($"Couldn't find user: {ex.Message}");
+    }
+  }
+  
+  public async Task<UserComplete> GetCompleteUser(int userId)
+  {
+    try
+    {
+      return (await _context.UsersComplete.FromSqlInterpolated($"EXEC BasicWebAPI.spUsers_Get @UserId={userId}")
+        .ToListAsync())[0] ?? throw new Exception("User not found");
     }
     catch (Exception ex)
     {
@@ -38,6 +73,21 @@ public class UserRepository : IUserRepository
     catch (Exception ex)
     {
       throw new Exception($"Couldn't update entity: {ex.Message}");
+    }
+  }
+  
+  public async Task<bool> DeleteUser(int userId)
+  {
+    try
+    {
+      var userToDelete = await _context.Users.FindAsync(userId);
+      if (userToDelete is null) throw new Exception("User not found");
+      _context.Users.Remove(userToDelete);
+      return await _context.SaveChangesAsync() > 0;
+    }
+    catch (Exception ex)
+    {
+      throw new Exception($"Couldn't find user: {ex.Message}");
     }
   }
 }

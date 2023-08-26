@@ -10,6 +10,7 @@ public class ApplicationDbContext : DbContext
   public DbSet<UserSalary> UserSalaries { get; set; } = null!;
   public DbSet<Auth> Auths { get; set; } = null!;
   public DbSet<Post> Posts { get; set; } = null!;
+  public DbSet<UserComplete> UsersComplete { get; set; } = null!;
   public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
   {
   }
@@ -49,6 +50,10 @@ public class ApplicationDbContext : DbContext
     modelBuilder.Entity<Post>()
       .ToTable("Posts", "BasicWebAPI")
       .HasKey(post => post.PostId);
+
+    modelBuilder.Entity<UserComplete>()
+      .ToTable("UsersComplete", "BasicWebAPI")
+      .HasKey(user => user.UserId);
   }
 
 }
