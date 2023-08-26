@@ -9,7 +9,7 @@ public class ApplicationDbContext : DbContext
   public DbSet<UserJobInfo> UserJobInfo { get; set; } = null!;
   public DbSet<UserSalary> UserSalaries { get; set; } = null!;
   public DbSet<Auth> Auths { get; set; } = null!;
-  public DbSet<Post> Posts { get; set; } = null!;
+  public DbSet<Post>? Posts { get; set; }
   public DbSet<UserComplete> UsersComplete { get; set; } = null!;
   public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
   {

@@ -28,6 +28,7 @@ builder.Services.AddScoped<ICommonRepository, CommonRepository>();
 builder.Services.AddScoped<IUserJobInfoRepository, UserJobInfoRepository>();
 builder.Services.AddScoped<IUserSalaryRepository, UserSalaryRepository>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
+builder.Services.AddScoped<ICompletePostRepository, CompletePostRepository>();
 builder.Services.AddControllers();
 
 //Configure jwt authentication
