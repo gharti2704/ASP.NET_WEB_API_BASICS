@@ -23,6 +23,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Inject Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICompleteUserRepository, CompleteUserRepository>();
 builder.Services.AddScoped<ICommonRepository, CommonRepository>();
 builder.Services.AddScoped<IUserJobInfoRepository, UserJobInfoRepository>();
 builder.Services.AddScoped<IUserSalaryRepository, UserSalaryRepository>();
