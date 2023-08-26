@@ -22,19 +22,7 @@ public class UserRepository : IUserRepository
       throw new Exception(e.Message);
     }
   }
-  
-  public async Task<IEnumerable<UserComplete>> GetCompleteUsers()
-  {
-    try
-    {
-      return await _context.UsersComplete.FromSqlInterpolated($"EXEC BasicWebAPI.spUsers_Get").ToListAsync();
-    }
-    catch (Exception e)
-    {
-      Console.WriteLine(e);
-      throw new Exception(e.Message);
-    }
-  }
+    
   public async Task<User> GetUser(int userId)
   {
     try
@@ -47,18 +35,6 @@ public class UserRepository : IUserRepository
     }
   }
   
-  public async Task<UserComplete> GetCompleteUser(int userId)
-  {
-    try
-    {
-      return (await _context.UsersComplete.FromSqlInterpolated($"EXEC BasicWebAPI.spUsers_Get @UserId={userId}")
-        .ToListAsync())[0] ?? throw new Exception("User not found");
-    }
-    catch (Exception ex)
-    {
-      throw new Exception($"Couldn't find user: {ex.Message}");
-    }
-  }
   public async Task<User> UpdateUser(int userId, User userToUpdate)
   {
     try
