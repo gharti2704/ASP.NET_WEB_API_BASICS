@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace basic.Controllers;
 
-[Authorize]
+// [Authorize]
 [ApiController]
 [Route("[controller]")]
 public class PostCompleteController : ControllerBase
@@ -27,7 +27,7 @@ public class PostCompleteController : ControllerBase
         }
         catch (Exception e)
         {
-            throw new Exception($"Error occurred: {e.Message}");
+            throw new Exception($"Error occurred --Message: {e.Message}");
         }
     }
 
@@ -37,7 +37,35 @@ public class PostCompleteController : ControllerBase
         try
         {
             var post = await _completePostRepository.GetPost(postId);
-            return post is not null ? Ok(post) : NotFound("Post doesn't Exist");
+            return Ok(post);
+        }
+        catch (Exception e)
+        {
+            throw new Exception($"Error occurred --Message: {e.Message}");
+        }
+    }
+
+    [HttpGet("search/{searchTerm}")]
+    public async Task<IActionResult> Search(string searchTerm)
+    {
+        try
+        {
+            var posts = await _completePostRepository.Search(searchTerm);
+            return Ok(posts);
+        }
+        catch (Exception e)
+        {
+            throw new Exception($"Error occurred --Message: {e.Message}");
+        }
+    }
+
+    [HttpGet("user/{userId:int:min(1)}")]
+    public async Task<IActionResult> GetPostByUser(int userId)
+    {
+        try
+        {
+            var posts = await _completePostRepository.GetPostByUser(userId);
+            return Ok(posts);
         }
         catch (Exception e)
         {
